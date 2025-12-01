@@ -15,8 +15,11 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
-    name: props.user.name,
-    email: props.user.email,
+    name: props.user.name ?? "",
+    email: props.user.email ?? "",
+    username: props.user.username ?? "",
+    dob: props.user.dob ?? "",
+    education: props.user.education ?? "",
     photo: null,
 });
 
@@ -47,7 +50,7 @@ const selectNewPhoto = () => {
 const updatePhotoPreview = () => {
     const photo = photoInput.value.files[0];
 
-    if (! photo) return;
+    if (!photo) return;
 
     const reader = new FileReader();
 
@@ -82,34 +85,36 @@ const clearPhotoFileInput = () => {
         </template>
 
         <template #description>
-            Update your account's profile information and email address.
+            Update your account's profile information.
         </template>
 
         <template #form>
+
             <!-- Profile Photo -->
             <div v-if="$page.props.jetstream.managesProfilePhotos" class="col-span-6 sm:col-span-4">
-                <!-- Profile Photo File Input -->
+                
+                <!-- File Input -->
                 <input
                     id="photo"
                     ref="photoInput"
                     type="file"
-                    class="hidden"
+                    class=""
                     @change="updatePhotoPreview"
                 >
 
-                <InputLabel for="photo" value="Photo" />
+                <InputLabel for="photo" value="Profile Photo" />
 
-                <!-- Current Profile Photo -->
-                <div v-show="! photoPreview" class="mt-2">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full size-20 object-cover">
+                <!-- Current Photo -->
+                <div v-show="!photoPreview" class="mt-2">
+                    <img :src="user.profile_photo_url"
+                         :alt="user.name"
+                         class="rounded-full size-20 object-cover">
                 </div>
 
-                <!-- New Profile Photo Preview -->
+                <!-- New Photo Preview -->
                 <div v-show="photoPreview" class="mt-2">
-                    <span
-                        class="block rounded-full size-20 bg-cover bg-no-repeat bg-center"
-                        :style="'background-image: url(\'' + photoPreview + '\');'"
-                    />
+                    <span class="block rounded-full size-20 bg-cover bg-center"
+                          :style="'background-image: url(' + photoPreview + ')'"></span>
                 </div>
 
                 <SecondaryButton class="mt-2 me-2" type="button" @click.prevent="selectNewPhoto">
@@ -128,6 +133,18 @@ const clearPhotoFileInput = () => {
                 <InputError :message="form.errors.photo" class="mt-2" />
             </div>
 
+            <!-- Username -->
+            <!-- <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="username" value="Username" />
+                <TextInput
+                    id="username"
+                    v-model="form.username"
+                    type="text"
+                    class="mt-1 block w-full"
+                />
+                <InputError :message="form.errors.username" class="mt-2" />
+            </div> -->
+
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="name" value="Name" />
@@ -137,13 +154,12 @@ const clearPhotoFileInput = () => {
                     type="text"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="name"
                 />
                 <InputError :message="form.errors.name" class="mt-2" />
             </div>
 
             <!-- Email -->
-            <div class="col-span-6 sm:col-span-4">
+            <!-- <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="email" value="Email" />
                 <TextInput
                     id="email"
@@ -151,30 +167,54 @@ const clearPhotoFileInput = () => {
                     type="email"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="username"
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
 
                 <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
                     <p class="text-sm mt-2">
-                        Your email address is unverified.
+                        Your email is unverified.
 
                         <Link
                             :href="route('verification.send')"
                             method="post"
                             as="button"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            class="underline text-sm text-gray-600 hover:text-gray-900"
                             @click.prevent="sendEmailVerification"
                         >
-                            Click here to re-send the verification email.
+                            Click here to re-send verification email.
                         </Link>
                     </p>
 
-                    <div v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600">
-                        A new verification link has been sent to your email address.
+                    <div v-show="verificationLinkSent" class="mt-2 text-sm text-green-600">
+                        A new verification link has been sent!
                     </div>
                 </div>
+            </div> -->
+
+            <!-- DOB -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="dob" value="Date of Birth" />
+                <TextInput
+                    id="dob"
+                    v-model="form.dob"
+                    type="date"
+                    class="mt-1 block w-full"
+                />
+                <InputError :message="form.errors.dob" class="mt-2" />
             </div>
+
+            <!-- Education -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="education" value="Education" />
+                <TextInput
+                    id="education"
+                    v-model="form.education"
+                    type="text"
+                    class="mt-1 block w-full"
+                />
+                <InputError :message="form.errors.education" class="mt-2" />
+            </div>
+
         </template>
 
         <template #actions>
@@ -182,7 +222,7 @@ const clearPhotoFileInput = () => {
                 Saved.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <PrimaryButton :disabled="form.processing">
                 Save
             </PrimaryButton>
         </template>

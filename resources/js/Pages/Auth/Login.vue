@@ -88,18 +88,18 @@ const submit = () => {
                 <PrimaryButton class="ms-4 mr-2" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in
                 </PrimaryButton> 
-                <button
-                    @click="googleLogin"
-                    class="rounded-md px-4 py-2 bg-red-500 text-white hover:bg-red-600 w-full mt-4 flex items-center justify-center gap-2"
-                    >
-                    <img
-                        class="h-6 w-6"
-                        src="images/google.png"
-                        alt="Google"
-                    />
-                    <span>Login with Google</span>
-                </button>
             </div>
+            <button
+                @click="googleLogin"
+                class="rounded-md px-4 py-2 bg-red-500 text-white hover:bg-red-600 w-full mt-4 flex items-center justify-center gap-2"
+                >
+                <img
+                    class="h-6 w-6"
+                    src="images/google.png"
+                    alt="Google"
+                />
+                <span>Login with Google</span>
+            </button>
         </form>
     </AuthenticationCard>
 </template>
