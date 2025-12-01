@@ -8,7 +8,7 @@ A complete authentication + task management system built with **Laravel 12**, **
 ### Authentication
 - User Signup (username, email, password)
 - Login with Email + Password
-- Login / Signup with **Login With Gmail**
+- Login / Signup with **With Google**
 - Forgot Password
 - Reset Password
 
